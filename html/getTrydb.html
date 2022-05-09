@@ -1,0 +1,587 @@
+<html>
+           <head>
+           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+           </head>
+            <body>
+
+            <body style="margin:10;padding:10"></body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="https://raw.githubusercontent.com/PecanProject/BETYdb-YABA/master/images/bety.png" alt="" width="30" height="24" class="d-inline-block align-text-top"> BETYdb
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="BETYdb.home.html">Home</span></a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="getTrydb.html">Species/Traits</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="BETYdb.pfts.html">PFTs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="BETYdb.sites.html">Sites/Yields</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="BETYdb.tryDB.html">TRY-db additions</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        External
+      </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="https://www.betydb.org/">BETYdb</a></li>
+                        <li><a class="dropdown-item" href="https://www.try-db.org//">TRYdb</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <div class="btn-nav"><a class="btn btn-primary btn-small navbar-btn" href="BETYdb.help.html">Help</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>                    
+
+
+
+<head>
+
+
+  <style>
+         select {
+              font-size: 16px;
+              width: 200px;
+            }
+
+          ul.ui-autocomplete {
+             list-style: none;
+             list-style: none;
+            list-style-type: none;
+             padding: 0px;
+             margin: 0px; 
+               }  
+
+         .ui-helper-hidden-accessible { 
+               position: absolute; 
+               left:-999em; }
+
+
+
+ 
+
+           table, th, td {
+                         border: 1px solid black;
+                         border-collapse: collapse;
+                  }
+               th, td {  
+                         text-align: center;      
+                     }
+
+               th {
+                       background-color:#4285F4;
+                       padding: 15px;
+                       color: white;
+                   }
+
+
+
+            tr:nth-child(even){background-color: #f2f2f2;}
+
+            tr:hover {background-color: #ddd;}
+
+
+
+
+             .button {
+                      border: 2px solid dodgerblue;
+                      color: white;
+                      border-radius: 4px;
+                      font-size: 18px;
+                      text-align: center;
+                      background-color: #4285F4;
+                     }     
+ 
+             .button:hover {
+                      border: 2px solid dodgerblue;
+                     color: royalblue;                     
+                     background-color: white;
+                    
+                     }
+
+            ul.ui-autocomplete ul.ui-state-focus {
+              
+             border: 1px solid #000;
+             background: #808080;
+            } 
+
+          
+          .split {
+            height: 100%;
+            width: 50%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            border: "black"
+            overflow-x: hidden;
+            padding-top: 20px;
+            }
+
+
+          .centered {
+             position: absolute;
+             top: 50%;
+             left: 50%;
+             transform: translate(-50%, -50%);
+             text-align: center;
+           }
+
+
+           .left {
+               left: 0;
+  
+            }
+
+          .right {
+             right: 0;
+
+            }
+
+          .row{
+           display: flex;
+          }
+
+
+          .column {
+            flex: 50%;
+           padding: 10px;
+             height: 300px;
+           }
+
+
+
+             .page {
+             text-align: center; 
+             }
+
+
+         footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+</style>
+</head>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+            <script src='https://www.gstatic.com/charts/loader.js'></script>
+            <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>  
+            <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> 
+          <body>
+              <h1>Species/Traits</h1>
+               <div class="row">
+               <div class="column">
+               <label> Species:</label> <input id="species" placeholder="rubra"/>
+               <button id ="but" class = "button"> Find Traits</button>
+               <button class="button" onclick="makedownload1()"> Download</button>
+
+               <div id="returntraits" style="padding-top:50px;"></div><br></br>
+               <div id = "specieshist"></div>
+               </div>
+                <div class="column">
+               <label> Traits:</label><input id="traits" placeholder="leafN"/>
+               <button id ="but2" class = "button"> Find Species</button>
+               <button class="button" onclick="makedownload2()"> Download</button>
+               <div id="returnspecies" style="padding-top:50px;"></div><br></br>
+               <div id="traitshist"></div>
+             </div>
+             </div>
+          <script>
+               
+          
+
+              $(function(){
+                $( "#species" ).autocomplete({
+                minLength: 3,
+                source: function( request, response ) {
+                    $.ajax({
+                        url: "https://bioed.bu.edu/cgi-bin/students_22/Group_N/getTrydb.py",
+                        data: {
+                            species: request.term,
+                            selector: "species"
+                        },
+                        dataType: 'json',
+                        success: function( data ) {
+                          response(data);
+                        }
+                    });
+                },
+            });
+          });
+
+           $(function(){
+                
+                $( "#traits" ).autocomplete({
+                minLength: 3,
+                source: function( request, response ) {
+                    $.ajax({
+                        url: "https://bioed.bu.edu/cgi-bin/students_22/Group_N/getTrydb.py",
+                        data: {
+                            traits: request.term,
+                            selector: "traits"
+                        },
+                        dataType: 'json',
+                        success: function( data ) {
+                          response(data);
+                        }
+                    });
+                },
+            });
+          });
+
+
+
+           $("#but").click(function(){
+               $("#returnspecies").empty()
+               $("#traitshist").empty()
+               let value = $("#species").val()
+                if(value != ""){
+	       	 $.ajax({
+		 type: "GET",
+		 url: "https://bioed.bu.edu/cgi-bin/students_22/Group_N/getTrydb.py",
+                 dataType: 'json', 
+		data:{'species':value,'selector':'findtraits'},
+                 
+		success: function(data,value){
+                         create_table(data)
+                         document.getElementById("returnspecies").style.display = "block"; 
+                         makehist(value)
+                       }
+
+
+	       	});
+                      }
+
+                else{
+                  alert("please enter species first")
+                    }
+              		});
+         
+
+            $("#but2").click(function(){
+               $("#returntraits").empty()
+               $("#specieshist").empty()
+               let value = $("#traits").val()
+                if(value != ""){
+                 $.ajax({
+                 type: "GET",
+                 url: "https://bioed.bu.edu/cgi-bin/students_22/Group_N/getTrydb.py",
+                 dataType: 'json', 
+                data:{'traits':value,'selector':'findspecies'},
+                 
+                success: function(data,value){
+                         table(data)
+                         makehist2(value)
+                      
+                       }
+
+
+                });
+                $("#returntraits").empty();
+                      }
+                else {
+                
+                  alert("please enter traits first")
+                    }
+                        });
+
+
+
+//            function create_table(data){
+  //             if (data ==""){
+    //            alert("no data")
+      //          }
+        //       else{
+          //     let species = $("#species").val()
+            //   let table_body_contents = "";
+            //    let traits = "";
+             //   $("#returntraits").empty();
+              //      for (let row= 0; row<data.length; row++) {
+               //         traits = data[row];
+                //        table_body_contents += `<tr><td> ${traits}</td></tr>`;
+                 //        }
+                 //   let table_template = `<table><thead><tr><th>Traits associated with species ${species}</th></tr></thead><tbody>${table_body_contents}</tbody></table>`;
+                  //   $("#returntraits").append(table_template);
+
+                   //   }
+                     
+
+
+                 //  }
+
+
+
+                 google.charts.load('current', {'packages':['table']});
+
+                     function create_table(data) {
+                       if(data == ""){
+                       alert("no data")
+                       }
+                       else{
+                        var newdata = new google.visualization.DataTable();
+                           newdata.addColumn('string','traits');
+                         //  newdata.addColumn('number','mean');
+                           newdata.addRows(data);            
+
+                       var table = new google.visualization.Table(document.getElementById('returntraits'));
+
+
+                       var cssClasses = {
+                         headerRow: 'thead-dark',
+                         headerCell: 'header-cell',
+                         hoverTableRow: 'table-row',
+                         selectedTableRow: 'table-row',
+                         frozenColumns: 0,
+                         showRowNumber: true,
+                         tableCell: 'table-cell'
+                         };
+
+                      table.draw(newdata, {
+                         showRowNumber: false,
+                         width: '100%',
+                         height: '100%',
+                         page: "enable",
+                         pageSize: 15,
+                         'cssClassNames':cssClasses
+                          });
+                       }
+                     }
+
+
+
+   
+
+                    function table(data) {
+                      if(data == ""){
+                       alert("no data")
+                       }
+                      else{
+                        var newdata = new google.visualization.DataTable();
+                           newdata.addColumn('string','species');
+                           newdata.addRows(data);
+
+                       var table = new google.visualization.Table(document.getElementById('returnspecies'));
+
+
+                       var cssClasses = {
+                         headerRow: 'thead-dark',
+                         headerCell: 'header-cell',
+                         hoverTableRow: 'table-row',
+                         selectedTableRow: 'table-row',
+                         frozenColumns: 0,
+                         showRowNumber: true,
+                         tableCell: 'table-cell'
+                         };
+
+                      table.draw(newdata, {
+                         showRowNumber: false,
+                         width: '100%',
+                         height: '100%',
+                         page: "enable",
+                         pageSize: 15,
+                         'cssClassNames':cssClasses
+                          });
+                       }
+                     }
+ 
+
+
+               
+//               function table(data){
+  //             if (data ==""){
+    //            alert("no data")
+      //          }
+       //        else{
+        //       let traits = $("#traits").val()
+         //      let table_body_contents = "";
+          //      let species = "";
+           //     $("#returnspecies").empty();
+            //        for (let row= 0; row<data.length; row++) {
+             //           species = data[row];
+              //          table_body_contents += `<tr><td> ${species}</td></tr>`;
+               //          }
+               //     let table_template = `<table><thead><tr><th> Species associated with trait ${traits}</th></tr></thead><tbody>${table_body_contents}</tbody></table>`;
+               //      $("#returnspecies").append(table_template);
+
+                 //     }
+                                                 
+
+               //    }
+
+
+
+
+
+               function makehist(value){
+                  let spe = $("#species").val()
+                 $.get("https://bioed.bu.edu/cgi-bin/students_22/Group_N/getTrydb.py",
+                      {species: spe, selector:"makehist"},
+                      function(data){
+                      make(data)
+                      },
+                      'json');
+                    }
+
+
+                google.charts.load("current", {packages:["bar"]});
+                function make(data){
+                       google.charts.load("current",{pacakges:["bar"]});
+                       var newdata = new google.visualization.DataTable();
+                           newdata.addColumn('string','Traits');
+                           newdata.addColumn('number','mean');
+                           newdata.addRows(data);
+                       var spe = $("#species").val()
+                       var test = "Mean for all traits of species "
+                       var options = {
+                           'width': 600,
+                           'height': 400,
+                           'lengend': {position: 'top', maxLines: 3},
+                           'bar': { groupWidth: '100%' },
+                           'isStacked': true,
+                           'is3D': true,
+                           chart: {
+                           'title': test + spe,
+                           'is3D': true
+                         }
+                        }
+                       
+                       var chart = new google.charts.Bar(document.getElementById('specieshist'));
+                       chart.draw(newdata, options);
+                      }
+
+              
+                function makehist2(value){
+                  let spe = $("#traits").val()
+                 $.get("https://bioed.bu.edu/cgi-bin/students_22/Group_N/getTrydb.py",
+                      {traits: spe, selector:"makehist2"},
+                      function(data){
+                      make2(data)
+                      },
+                      'json');
+                    }
+
+
+                google.charts.load("current", {packages:["bar"]});
+                function make2(data){
+                       google.charts.load("current",{pacakges:["bar"]});
+                       var newdata = new google.visualization.DataTable();
+                           newdata.addColumn('string','species');
+                           newdata.addColumn('number','mean');
+                           newdata.addRows(data);
+       //                    alert(data);
+                       var test = "Mean for all species with trait  "
+                       var tra = $("#traits").val()
+                       var options = {
+                           width: 600,
+                           height: 400,
+                           lengend: {position: 'top', maxLines: 3},
+                           bar: { groupWidth: '75%' },
+                           isStacked: true,
+                          chart: {
+                           'title': test + tra
+                        }
+                       }
+                       var chart = new google.charts.Bar(document.getElementById('traitshist'));
+                       chart.draw(newdata, options);
+                      }
+                 
+
+              function makedownload1(){
+                    let down = $("#species").val();
+                  if (down == ""){
+                     alert("Nothing to download")
+                     }
+                  else {
+                  $.ajax({
+                     url: "https://bioed.bu.edu/cgi-bin/students_22/Group_N/getTrydb.py",
+                     type: "GET",
+                     dataType: 'json',
+                     data:{'species':down,'selector':'download'},
+                     success: function(data) {
+                     var blob=new Blob([data]);
+                     var link=document.createElement('a');
+                     link.href=window.URL.createObjectURL(blob);
+                     link.download="traitsresult.csv";
+                     link.click();
+
+                    }
+                   });
+                   }
+                 }
+
+
+                 function makedownload2(){
+                    let down = $("#traits").val();
+                  if (down == ""){
+                     alert("Nothing to download")
+                     }
+                  else {
+                  $.ajax({
+                     url: "https://bioed.bu.edu/cgi-bin/students_22/Group_N/getTrydb.py",
+                     type: "GET",
+                     dataType: 'json',
+                     data:{'traits':down,'selector':'download2'},
+                     success: function(data) {
+                     var blob=new Blob([data]);
+                     var link=document.createElement('a');
+                     link.href=window.URL.createObjectURL(blob);
+                     link.download="speciesresult.csv";
+                     link.click();
+
+                    }
+                   });
+                   }
+                 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+</script>   
+</body>
+</html>

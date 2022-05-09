@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  # BETY rails frontend to the database
+  bety:
+    image: pecan/bety:${BRANCH:-latest}
+    networks:
+      - bety
+    ports:
+      - 8000
+    environment:
+      - UNICORN_WORKER_PROCESSES=1
+      - SECRET_KEY_BASE=thisisnotasecret
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  # postgresql + postgis to hold all the data
+  postgres:
+    image: mdillon/postgis:9.5
+    networks:
+      - bety
+    ports:
+      - "6543:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./transfer:/var/transfer:rw
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: password
+    expose:
+      - 5432
+
+networks:
+  bety:
+    external: true
+
+volumes:
+  postgres:
+

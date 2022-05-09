@@ -1,0 +1,213 @@
+<html>     
+           <head>
+           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+           </head>
+            <body>
+
+            <body style="margin:10;padding:10"></body>
+                
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="https://raw.githubusercontent.com/PecanProject/BETYdb-YABA/master/images/bety.png" alt="" width="30" height="24" class="d-inline-block align-text-top"> BETYdb
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="BETYdb.home.html">Home</span></a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="getTrydb.html">Species/Traits</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="BETYdb.pfts.html">PFTs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="BETYdb.sites.html">Sites/Yields</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="BETYdb.tryDB.html">TRY-db additions</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        External
+      </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="https://www.betydb.org/">BETYdb</a></li>
+                        <li><a class="dropdown-item" href="https://www.try-db.org//">TRYdb</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <div class="btn-nav"><a class="btn btn-primary btn-small navbar-btn" href="BETYdb.help.html">Help</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+            <script src='https://www.gstatic.com/charts/loader.js'></script>
+            <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+            <script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+
+
+              <label> Select PFTs:</label> 
+            <select id="pft">
+            <!-- add an empty value -->
+            <option value="select">- PFT -</option>
+            <option value='pft_5'>PFT5</option>
+            <option value='pft_6'>PFT6</option>
+            <option value='pft_7'>PFT7</option>
+             <option value='pft_9'>PFT9</option>
+             <option value='pft_10'>PFT10</option>
+             <option value='pft_13'>PFT13</option> 
+            </select>
+             <button id ="but" class = "button"> Find PFT</button>
+
+            <div id ='table_div'></div>
+
+<script>
+
+
+  $("#but").click(function(){
+               let value = $("#pft").val()
+                if(value != ""){
+                 $.ajax({
+                 type: "GET",
+                 url: "https://bioed.bu.edu/cgi-bin/students_22/Group_N/getTrydb.py",
+                 dataType: 'json', 
+                data:{'pfts':value,'selector':'pfts'},
+                 
+                success: function(data){
+                         create_table(data)
+                       }
+
+
+                });
+                      }
+
+                else{
+                  alert("please enter species first")
+                    }
+                        });
+
+
+google.charts.load('current', {'packages':['table']});
+google.load('visualization', 'current', {packages:["corechart, table"]});
+
+function create_table(data) {
+
+            var newdata = google.visualization.arrayToDataTable(data);
+                         //  newdata.addColumn('string','species');
+                          // newdata.addColumn('number','mean');
+                        //   newdata.addRows(data);            
+
+            var table = new google.visualization.Table(document.getElementById('table_div'));
+
+
+            var cssClasses = {
+                headerRow: 'thead-dark',
+                headerCell: 'header-cell',
+                hoverTableRow: 'table-row',
+                frozenColumns: 0,
+                showRowNumber: true,
+                selectedTableRow: 'table-row',
+                tableCell: 'table-cell'
+            };
+
+            table.draw(newdata, {
+                showRowNumber: false,
+                width: '100%',
+                height: '100%',
+                page: "enable",
+                pageSize: 15
+            });
+        }
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+<footer class="bd-footer py-5 mt-5 bg-light">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-3 mb-3">
+                <a class="d-inline-flex align-items-center mb-2 link-dark text-decoration-none" href="/" aria-label="Bootstrap">
+
+                    <img src="https://raw.githubusercontent.com/PecanProject/BETYdb-YABA/master/images/bety.png" alt="" width="40" height="32" class="d-block me-2">
+                    <span class="fs-5">BETY</span>
+                </a>
+                <ul class="list-unstyled small text-muted">
+                    <li class="mb-2">This site was created at Boston University as part of BF768, Spring 2022, <a href="mailto:gbenson@bu.edu" target="_blank">Gary Benson</a> instructor.</li>
+                </ul>
+            </div>
+            <div class="col-6 col-lg-2 offset-lg-2 mb-3">
+                <h5>Links</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2 text-decoration-none"><a href="BETYdb.home.html">Home</a></li>
+                    <li class="mb-2"><a href="getTrydb.html">Species/Traits</a></li>
+                    <li class="mb-2"><a href="BETYdb.pfts.html">PFTs</a></li>
+                    <li class="mb-2"><a href="BETYdb.sites.html">Sites/Yields</a></li>
+                    <li class="mb-2"><a href="BETYdb.tryDB.html">TRY-db additions</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-lg-2 mb-3">
+                <h5>Ecological Forcasting Lab</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2 text-decoration-none"> Dr. Michael Dietze</li>
+                    <li class="mb-2 text-decoration-none"> <a href="mailto:dietze@bu.edu" target="_blank">dietze@bu.edu</a></li>
+                    <li class="mb-2"><a href="https://people.bu.edu/dietze/" target="_blank">Lab Website</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-lg-2 mb-3">
+                <h5>Student Developers</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2 text-decoration-none">Amulya Shastry
+                    </li>
+                    <li class="mb-2 text-decoration-none"> <a href="mailto:shastrya@bu.edu" target="_blank">shastrya@bu.edu</a></li><br>
+                    <li class="mb-2 text-decoration-none">Minyi Lee
+                    </li>
+                    <li class="mb-2 text-decoration-none"> <a href="mailto:minyilee@bu.edu" target="_blank">minyilee@bu.edu</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+
+</html>
+
+

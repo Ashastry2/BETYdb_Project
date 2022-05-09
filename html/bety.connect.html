@@ -1,0 +1,122 @@
+<!-- Create a webpage in html that accepts an miRNA and then uses AJAX to produce a table of genes that are targeted by the miRNA and their targeting scores. To do that, put a python program on bioed that queries the miRNA database for the genes and scores. Use the jQuery .get function to call that program. Also, create a javascript function that formats the table output and puts the resulting table in the <div> -->
+
+<html>
+    <head>
+        <!-- css style information for the <table> -->
+        <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 15px;
+            }            
+        </style>
+        
+        <!-- load the jQuery library -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+
+    </head>
+    <body>
+        <!-- input box for gene name -->
+         Enter a pft_id (example 4): <input type="text" id="pft_id">
+        <br><br>
+        
+        <!-- button to activate AJAX call.  
+        note it's not part of a form -->
+        <!-- <button>Click</button><br><br>  -->
+
+        <button class="mdc-button mdc-button--outlined">
+  <span class="mdc-button__ripple"></span>
+  <span class="mdc-button__label">Button</span>
+</button>
+        
+        <!-- div to hold the table returned by AJAX -->
+        <div id="gene_table" class="mdc-data-table">
+            <div class="mdc-data-table__table-container">
+                <table class="mdc-data-table__table" aria-label="Dessert calories">
+                </table>
+            </div>
+        </div>
+        
+        <!-- javascript -->
+        <script>
+            //start after the document is loaded
+            $(document).ready(function(){
+                //event is button click
+                $(":button").click(function(){
+                    let pft_id=$("#pft_id").val();
+                    
+                    //>>>>>>>>>>>>>>> AJAX .get() request here <<<<<<<<<<<<<<<<<<//
+                    //note input_data consists of name:value pairs
+                    //in this case gene:value of the input box labeled "miRNA_name"
+                    //create_table builds the table html (see below)            
+                    //the anonymous callback function in the .get calls create_table with the data returned by the AJAX call 
+                    //the return type of the data is specified as json (must match in cgi program)
+                    
+                    $.get("https://bioed.bu.edu/cgi-bin/students_22/Group_N/bety.connect.py", //<<< url
+                          {pft_id:pft_id},                                        //<<< input_data
+                          function(data){  
+                            console.log(data)                                             //<<< callback function
+                            create_table(data);
+                          },
+                          "json"                                                        //<<< return_data_type
+                    );
+                    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+                    
+                });
+            });
+            
+            //this function constructs the html table for the results
+            function create_table(data){ 
+                //gene name to insert in table column header 
+                let miRNA_name = $("#miRNA_name").val()
+                
+                //initiate table body and miRNA name
+                let table_body_contents = "";
+                let rowData = "";
+                
+                //clear out the contents of the gene_table div
+                $("#gene_table").empty();
+                
+                //if data is returned from the AJAX call, build a new table
+                if (data!=""){
+                    
+                    //loop through rows of the data
+                    for (let row= 0; row<data.length; row++) {
+                        
+                        //miRNA name is the first element of each row
+                        rowData = data[row];
+                        geneName = rowData[0]
+                        targetScore = rowData[1]
+                        name = rowData[2]
+                        
+                        //construct the table data rows
+                        //for string substitution with ${variable name}, use back ticks, not single or double quotes
+                        table_body_contents += `<tr><td> ${geneName}</td><td> ${targetScore}</td><<td> ${name}</td></tr>`;
+                    }
+                    let table_template = `
+                    <thead>
+                    <tr class="mdc-data-table__header-row">
+                      <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Dessert</th>
+                      <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Carbs (g)</th>
+                      <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Protein (g)</th>
+                      <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Comments</th>
+                    </tr>
+                  </thead>`
+
+                    
+                    //build the entire table template and susbstitute in the table data rows and the gene name 
+                    let table_template = `<table><thead><tr><th>PFT ID </th><th>SPECIE ID</th><th>SPECIE NAME</th></tr></thead><tbody>${table_body_contents}</tbody></table>`;
+                    
+                    //put the final table in the gene_table div
+                    $("#gene_table").append(table_template);
+                }
+            }
+            
+        </script>
+    </body>
+</html>
