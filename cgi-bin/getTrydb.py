@@ -8,10 +8,10 @@ import sys
 import psycopg2
 import json
 import pandas as pd
-
+import numpy as np
 # Make a function to execute query 
 
-def execute_query(query,s):
+def execute_query(query,s,t):
     connection = psycopg2.connect(
         host='127.0.0.1',
         user='postgres',
@@ -24,16 +24,10 @@ def execute_query(query,s):
         if(s == ""):
           cursor.execute(query) 
         else:
-#        if (s != "") and (t != ""):
- #         cursor.execute(query,[s,t])
-  #      elif(s == "") and (t != ""):
-  #        cursor.execute(query,[t])
-  #      elif(s != "") and (t == ""):
-  #        cursor.execute(query,[s])
-  #      elif(s == "") and (t == ""):
-  #        print("error")
-
-          cursor.execute(query,[s])
+          if(t == ""):
+            cursor.execute(query,[s])
+          if(t != ""):
+            cursor.execute(query,[s,t])
     except psycopg2.Error as e:
         print(e)
     results = cursor.fetchall()
@@ -44,6 +38,32 @@ def execute_query(query,s):
 def myconverter(o):
     if isinstance(o, datetime.datetime):
         return o.__str__()
+
+
+def execute_query2(query,s,t):
+    connection = psycopg2.connect(
+        host='127.0.0.1',
+        user='postgres',
+        password='',
+        database='bety',
+        port=6543)
+    cursor = connection.cursor()
+    
+    try:
+       if(s == ""):
+         cursor.execute(query)
+       else:
+          if(t == ""):
+            cursor.execute(query,[s])
+          if(t != ""):
+            cursor.execute(query,[s,t])
+    except psycopg2.Error as e:
+        print(e)
+    results = cursor.fetchall()
+    colnames = [desc[0] for desc in cursor.description]
+    connection.commit()
+    #results = np.vstack([results,colnames])
+    return(colnames + results)
 
 
 #form = cgi.FieldStorage()
@@ -141,17 +161,19 @@ if (form):
    
      if(Selector == "species"):
        new = '' + Species+ '%'+ ''
-       query = "select species from species where species like %s limit 10"
-       results = execute_query(query,new)
+       query = "select concat(species,' ',genus) as species from species where species like %s limit 10"
+       results = execute_query(query,new,t ="")
        flattenresults = []
        for row in results:
           flattenresults += [row[0]]
        print(json.dumps(flattenresults))
 
      if(Selector == "findtraits"):
-       query = "select distinct name from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where species = %s"
-       new = '' + Species+ ''
-       results = execute_query(query,new)
+       query = "select distinct name from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where species = %s and genus = %s"
+       breaks = Species.split()
+       new = '' + breaks[0]+ ''
+       new2 = ''+ breaks[1]+ ''
+       results = execute_query(query,new, new2)
        flattenresults = []
        for row in results:
           flattenresults += [row[0]]
@@ -160,47 +182,86 @@ if (form):
      if(Selector == "traits"):
         query = "select distinct name from traits join variables on (traits.variable_id  = variables.id) where name like %s"
         new = '' + '%' + Traits + '%' + ''
-        results = execute_query(query,new)
+        results = execute_query(query,new, t = "")
         flattenresults = []
         for row in results:
            flattenresults += [row[0]]
         print(json.dumps(flattenresults))
 
      if(Selector == "findspecies"):
-       query = "select distinct scientificname from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where name = %s"
+       query = "select distinct concat(species,' ',genus) as species from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where name = %s"
        new = '' + Traits+ ''
-       results = execute_query(query,new)
+       results = execute_query(query,new,t = "")
        flattenresults = []
        for row in results:
           flattenresults += [row[0]]
        print(json.dumps(results))
 
      if(Selector == "makehist"):
-       query ="select name, mean  from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where species = %s"
-       new = '' + Species + ''
-       results = execute_query(query,new)
-       print(json.dumps(results))
+       query ="select name, mean  from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where species = %s and genus = %s"
+       breaks = Species.split()
+       new = '' + breaks[0] + ''
+       new2 = '' + breaks[1]+ ''
+       results = execute_query(query,new,new2)
+#       print(json.dumps(results))
+       resultsDict = {}
+       for result in results:
+        if result[0] in resultsDict:
+          resultsDict[result[0]].append(result[1])
+        else:
+          resultsDict[result[0]] = [result[1]]
+       resultsFinal = []
+       #Col 1: Number specifying the low/minimum value of this marker. This is the base of the candle's center line. The column label is used as the series label in the legend (while the labels of the other columns are ignored).
+        #Col 2: Number specifying the opening/initial value of this marker. This is one vertical border of the candle. If less than the column 3 value, the candle will be filled; otherwise it will be hollow.
+        #Col 3: Number specifying the closing/final value of this marker. This is the second vertical border of the candle. If less than the column 2 value, the candle will be hollow; otherwise it will be filled.
+        #Col 4: Number specifying the high/maximum value of this marker. This is the top of the candle's center line.    
+       for result in resultsDict:
+          vals = resultsDict[result]
+          q75, q25 = np.percentile(vals, [75 ,25])
+          resultsFinal += [[result] + [min(vals)] + [q25] + [q75] + [max(vals)]]
+       print(json.dumps(resultsFinal))
+
+
+
+
+
+
 
      if(Selector == "makehist2"):
-       query ="select scientificname, mean  from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where name = %s"
+       query ="select concat(species,' ', genus) as species, mean  from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where name = %s"
        new = '' + Traits + ''
-       results = execute_query(query,new)
-       print(json.dumps(results))
+       results = execute_query(query,new, t = "")
+   #    print(json.dumps(results))
+       resultsDict = {}
+       for result in results:
+        if result[0] in resultsDict:
+          resultsDict[result[0]].append(result[1])
+        else:
+          resultsDict[result[0]] = [result[1]]
+       resultsFinal = []
+       for result in resultsDict:
+          vals = resultsDict[result]
+          q75, q25 = np.percentile(vals, [75 ,25])
+          resultsFinal += [[result] + [min(vals)] + [q25] + [q75] + [max(vals)]]
+       print(json.dumps(resultsFinal))
 
 
  
 
      if(Selector == "download"):
-       query ="select * from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where species = %s"
-       new = '' + Species + ''
-       results = execute_query(query,new)
+       query ="select * from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where species = %s and genus = %s"
+       breaks = Species.split()
+       new = '' + breaks[0]+ ''
+       new2 = ''+ breaks[1]+ ''
+       results = execute_query2(query,new, new2)
+      # A = np.vstack([results,A])
        print(json.dumps(results,default=str))
 
 
      if(Selector == "download2"):
        query ="select distinct * from species join traits on (species.id = specie_id) join variables on (traits.variable_id  = variables.id) where name = %s"
        new = '' + Traits + ''
-       results = execute_query(query,new)
+       results = execute_query2(query,new, t="")
        print(json.dumps(results,default=str))
 
 
