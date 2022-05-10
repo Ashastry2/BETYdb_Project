@@ -454,33 +454,47 @@
                       },
                       'json');
                     }
+                google.charts.load("current", { packages: ["bar"] });
+                google.charts.load('current', {'packages':['corechart']});
+                 function make(data) {
+                google.charts.load("current", {
+                    pacakges: ["corechart"]
+                });
+                var newdata = google.visualization.arrayToDataTable(data, true);
+                //  var newdata = new google.visualization.DataTable();
+                //      newdata.addColumn('string','Traits');
+                //      newdata.addColumn('number','mean');
+                //      newdata.addRows(data);
 
-
-                google.charts.load("current", {packages:["bar"]});
-                function make(data){
-                       google.charts.load("current",{pacakges:["bar"]});
-                       var newdata = new google.visualization.DataTable();
-                           newdata.addColumn('string','Traits');
-                           newdata.addColumn('number','mean');
-                           newdata.addRows(data);
-                       var spe = $("#species").val()
-                       var test = "Mean for all traits of species "
-                       var options = {
-                           'width': 600,
-                           'height': 400,
-                           'lengend': {position: 'top', maxLines: 3},
-                           'bar': { groupWidth: '100%' },
-                           'isStacked': true,
-                           'is3D': true,
-                           chart: {
-                           'title': test + spe,
-                           'is3D': true
-                         }
+                var spe = $("#species").val()
+                var test = "Mean for all traits of species "
+                var options = {
+                    'width': 600,
+                    'height': 400,
+                    legend: 'none',
+                    'bar': {
+                        groupWidth: '100%'
+                    },
+                    seriesType: 'candlesticks',
+                    series: {
+                        0: {
+                            type: 'candlesticks'
                         }
+                    },
+                    'isStacked': true,
+                    'is3D': true,
+                    chart: {
+                        'title': test + spe,
+                        'is3D': true
+                    }
+                }
+
+                var chart = new google.visualization.CandlestickChart(document.getElementById('specieshist'));
+                chart.draw(newdata, options);
+            }
+
+                           
                        
-                       var chart = new google.charts.Bar(document.getElementById('specieshist'));
-                       chart.draw(newdata, options);
-                      }
 
               
                 function makehist2(value){
@@ -493,31 +507,40 @@
                       'json');
                     }
 
-
-                google.charts.load("current", {packages:["bar"]});
-                function make2(data){
-                       google.charts.load("current",{pacakges:["bar"]});
-                       var newdata = new google.visualization.DataTable();
-                           newdata.addColumn('string','species');
-                           newdata.addColumn('number','mean');
-                           newdata.addRows(data);
-       //                    alert(data);
-                       var test = "Mean for all species with trait  "
-                       var tra = $("#traits").val()
-                       var options = {
-                           width: 600,
-                           height: 400,
-                           lengend: {position: 'top', maxLines: 3},
-                           bar: { groupWidth: '75%' },
-                           isStacked: true,
-                          chart: {
-                           'title': test + tra
+               google.charts.load("current", { packages: ["bar"] });
+                google.charts.load('current', {'packages':['corechart']});
+               function make2(data) {
+                google.charts.load("current", {
+                    pacakges: ["corechart"]
+                });
+                var newdata = google.visualization.arrayToDataTable(data, true);
+                var test = "Mean for all species with trait  "
+                var tra = $("#traits").val()
+                var options = {
+                    'width': 600,
+                    'height': 400,
+                    legend: 'none',
+                    'bar': {
+                        groupWidth: '100%'
+                    },
+                    seriesType: 'candlesticks',
+                    series: {
+                        0: {
+                            type: 'candlesticks'
                         }
-                       }
-                       var chart = new google.charts.Bar(document.getElementById('traitshist'));
-                       chart.draw(newdata, options);
-                      }
-                 
+                    },
+                    'isStacked': true,
+                    'is3D': true,
+                    chart: {
+                        'title': test + tra,
+                        'is3D': true
+                    }
+                }
+
+                var chart = new google.visualization.CandlestickChart(document.getElementById('traitshist'));
+                chart.draw(newdata, options);
+            }
+ 
 
               function makedownload1(){
                     let down = $("#species").val();

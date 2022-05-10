@@ -119,19 +119,21 @@ function create_table(data) {
                 headerRow: 'thead-dark',
                 headerCell: 'header-cell',
                 hoverTableRow: 'table-row',
-                frozenColumns: 0,
                 showRowNumber: true,
                 selectedTableRow: 'table-row',
                 tableCell: 'table-cell'
             };
-
-            table.draw(newdata, {
+            var options = {
                 showRowNumber: false,
                 width: '100%',
                 height: '100%',
                 page: "enable",
-                pageSize: 15
-            });
+                pageSize: 15,
+                frozenColumns: 1
+
+            }
+
+            table.draw(newdata,options);
         }
 
 
